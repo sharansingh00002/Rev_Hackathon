@@ -1,7 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_app/api/api_repo.dart';
+import 'package:flutter_app/detailed_page.dart';
 import 'package:flutter_app/model.dart';
-import 'package:open_file/open_file.dart';
 
 class PdfPagesList extends StatefulWidget {
   @override
@@ -17,7 +19,7 @@ class _PdfPagesListState extends State<PdfPagesList> {
         model = data;
       });
     });
-    Future.delayed(Duration(seconds: 25), () {
+    Future.delayed(Duration(seconds: 5), () {
       ApiRepo().getPdfLists().then((data) {
         if (context != null && mounted) {
           setState(() {
@@ -61,9 +63,17 @@ class _PdfPagesListState extends State<PdfPagesList> {
                         ApiRepo()
                             .downloadFile(
                                 '${model[index].fileName}${model[index].id.oid}')
-                            .then((val) {
+                            .then((val) async {
                           Navigator.pop(context);
-                          OpenFile.open(val);
+                          File file = File(val);
+                          String contents = await file.readAsString();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetailedPage(
+                                        text: contents,
+                                      )));
+//                          OpenFile.open(val);
                         });
                       },
                       child: Card(
@@ -93,7 +103,9 @@ class _PdfPagesListState extends State<PdfPagesList> {
                                           decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(36.0),
-                                            color: Colors.green,
+                                            color: (model[index].status == 0)
+                                                ? Colors.redAccent
+                                                : Colors.green,
                                           ),
                                           child: Center(
                                             child: Text(

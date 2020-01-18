@@ -192,7 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         borderRadius: BorderRadius.circular(4.0)),
                     child: Center(
                       child: Text(
-                        "Check uploaded Pdf's",
+                        "Check converted Pdf's",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
